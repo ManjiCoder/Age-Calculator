@@ -39,20 +39,13 @@ const DatePick = (): JSX.Element => {
       return;
     }
 
-    console.warn(currentDate - dob);
     const diff = (currentDate - dob) / 1000;
     const year = Math.round(diff / (3600 * 24 * 365.25));
     const month = Math.round(diff / (3600 * 24 * 30.417));
     const week = Math.round(diff / (3600 * 24 * 7));
     const day = Math.round(diff / 86400);
     const min = Math.round(diff / 60);
-    // const sec = Math.round(diff % 60);
-    console.warn(
-      {name: 'year', value: year},
-      {name: 'month', value: month},
-      {name: 'day', value: day},
-    );
-    // setDateObj([year, month, day,week]);
+
     setDateObj([
       {name: 'year', value: year},
       {name: 'month', value: month},
@@ -60,8 +53,6 @@ const DatePick = (): JSX.Element => {
       {name: 'week', value: week},
       {name: 'min', value: min},
     ]);
-    console.warn(diff / (3600 * 24 * 365.25));
-    // setDob('');
   };
 
   return (
@@ -109,13 +100,22 @@ const DatePick = (): JSX.Element => {
 
       <View style={styles.btnPrimary}>
         {dateObj.length > 0 &&
-          dateObj.map(({name, value}) => {
+          dateObj.map(({name, value}, index) => {
             // eslint-disable-next-line eqeqeq
             if (value != '00') {
               return (
-                <Text style={[styles.btnText, styles.showText]} key={name}>
+                <Text
+                  style={[
+                    styles.btnText,
+                    styles.showText,
+                    {fontSize: 16 + dateObj.length - index},
+                  ]}
+                  key={name}>
                   {name} :{' '}
-                  <Text style={styles.textBold}>
+                  <Text
+                    style={
+                      (styles.textBold, {fontSize: 16 + dateObj.length - index})
+                    }>
                     {value.toString().padStart(2, 0)}
                   </Text>
                 </Text>
@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 16,
     textAlign: 'center',
+    color: 'navy',
   },
   btnPrimary: {
     marginTop: 30,
