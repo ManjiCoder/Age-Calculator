@@ -2,7 +2,7 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import React, {useState} from 'react';
-import {format} from 'date-fns';
+import {format, subDays} from 'date-fns';
 import * as Yup from 'yup';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 // import {Formik} from 'formik';
@@ -74,6 +74,13 @@ const DatePick = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
+      {/* <Formik
+        initialValues={{dobDate: '', currentdate: ''}}
+        validationSchema={dateSchema}
+        onSubmit={values => console.log(values)}>
+        {({handleChange, handleBlur, handleSubmit, values}) => (
+          <View> */}
+      {/* Dob - Date */}
       <View style={styles.dateWrapper}>
         <Text style={styles.headingSecondary}>Date Of Birth :</Text>
 
@@ -82,6 +89,8 @@ const DatePick = (): JSX.Element => {
           mode="date"
           onConfirm={handleConfirmDob}
           onCancel={hideDatePickerDob}
+          // onChange={handleChange('dobDate')}
+          maximumDate={subDays(new Date(), 1)}
         />
 
         <TouchableOpacity style={styles.dateBtn} onPress={showDatePickerDob}>
@@ -91,6 +100,7 @@ const DatePick = (): JSX.Element => {
         </TouchableOpacity>
       </View>
 
+      {/* Current/updateCurrent - Date */}
       <View style={styles.dateWrapper}>
         <Text style={styles.headingSecondary}>Current Date :</Text>
 
@@ -111,6 +121,7 @@ const DatePick = (): JSX.Element => {
         </TouchableOpacity>
       </View>
 
+      {/* Checkbox */}
       <View style={styles.checkboxWrapper}>
         <BouncyCheckbox
           size={21}
@@ -122,10 +133,14 @@ const DatePick = (): JSX.Element => {
         />
       </View>
 
+      {/* Submit Button */}
       <TouchableOpacity style={styles.btnPrimary} onPress={calculateAge}>
         <Text style={[styles.headingSecondary, styles.btnText]}>Submit</Text>
       </TouchableOpacity>
-
+      {/* </View>
+        )}
+      </Formik> */}
+      {/* Show Result */}
       <View style={styles.btnPrimary}>
         {dateObj.length > 0 &&
           dateObj.map(({name, value}, index) => {
