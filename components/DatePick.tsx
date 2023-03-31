@@ -4,14 +4,17 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import React, {useState} from 'react';
 import {format} from 'date-fns';
 import * as Yup from 'yup';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 // import {Formik} from 'formik';
 
 const DatePick = (): JSX.Element => {
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [dateObj, setDateObj] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
+  const [isDatePickerVisibleDob, setDatePickerVisibilityDob] = useState(false);
+  const [isDatePickerVisibleCurrent, setDatePickerVisibilityCurrent] =
+    useState(false);
   const [dob, setDob] = useState('');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentDate, setCurrentDate] = useState(new Date().getTime());
+  const [dateObj, setDateObj] = useState([]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dateSchema = Yup.object().shape({
@@ -19,18 +22,32 @@ const DatePick = (): JSX.Element => {
     pickDate: Yup.date().required('pickDate is required'),
   });
 
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
+  const showDatePickerDob = () => {
+    setDatePickerVisibilityDob(true);
   };
 
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
+  const hideDatePickerDob = () => {
+    setDatePickerVisibilityDob(false);
   };
 
-  const handleConfirm = date => {
-    console.warn('A date has been picked: ', date);
-    hideDatePicker();
+  const showDatePickerCurrent = () => {
+    setDatePickerVisibilityCurrent(true);
+  };
+
+  const hideDatePickerCurrent = () => {
+    setDatePickerVisibilityCurrent(false);
+  };
+
+  const handleConfirmDob = date => {
+    console.warn({date});
+    hideDatePickerDob();
     setDob(new Date(date).getTime());
+  };
+
+  const handleConfirmCurrent = date => {
+    console.warn({date});
+    hideDatePickerCurrent();
+    setCurrentDate(new Date(date).getTime());
   };
 
   const calculateAge = () => {
@@ -61,13 +78,13 @@ const DatePick = (): JSX.Element => {
         <Text style={styles.headingSecondary}>Date Of Birth :</Text>
 
         <DateTimePickerModal
-          isVisible={isDatePickerVisible}
+          isVisible={isDatePickerVisibleDob}
           mode="date"
-          onConfirm={handleConfirm}
-          onCancel={hideDatePicker}
+          onConfirm={handleConfirmDob}
+          onCancel={hideDatePickerDob}
         />
 
-        <TouchableOpacity style={styles.dateBtn} onPress={showDatePicker}>
+        <TouchableOpacity style={styles.dateBtn} onPress={showDatePickerDob}>
           <Text style={styles.dateText}>
             {dob ? format(dob, 'dd-MMM-yyyy') : 'DD-MM-YYYY'}
           </Text>
@@ -78,20 +95,31 @@ const DatePick = (): JSX.Element => {
         <Text style={styles.headingSecondary}>Current Date :</Text>
 
         <DateTimePickerModal
-          isVisible={isDatePickerVisible}
+          isVisible={isDatePickerVisibleCurrent}
           mode="date"
-          onConfirm={handleConfirm}
-          onCancel={hideDatePicker}
+          onConfirm={handleConfirmCurrent}
+          onCancel={hideDatePickerCurrent}
         />
 
         <TouchableOpacity
           style={styles.dateBtn}
-          disabled={true}
-          onPress={showDatePicker}>
+          disabled={!isChecked}
+          onPress={showDatePickerCurrent}>
           <Text style={styles.dateText}>
             {format(currentDate, 'dd-MMM-yyyy')}
           </Text>
         </TouchableOpacity>
+      </View>
+
+      <View style={styles.checkboxWrapper}>
+        <BouncyCheckbox
+          size={21}
+          fillColor="navy"
+          unfillColor="white"
+          text="Click me to change the Current Date"
+          textStyle={styles.checkboxText}
+          onPress={() => setIsChecked(!isChecked)}
+        />
       </View>
 
       <TouchableOpacity style={styles.btnPrimary} onPress={calculateAge}>
@@ -138,6 +166,13 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     lineHeight: 20,
   },
+  checkboxWrapper: {
+    alignItems: 'center',
+  },
+  checkboxText: {
+    fontSize: 14,
+    color: 'navy',
+  },
   dateWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -164,7 +199,7 @@ const styles = StyleSheet.create({
     color: 'navy',
   },
   btnPrimary: {
-    marginTop: 30,
+    marginTop: 8,
     backgroundColor: 'navy',
     color: 'gold',
     width: 360,
