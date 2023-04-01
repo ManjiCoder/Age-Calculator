@@ -52,16 +52,25 @@ const DatePick = (): JSX.Element => {
 
   const calculateAge = () => {
     // console.warn('DOB: ', dob, 'currentDate: ', currentDate);
-    if (currentDate < dob) {
+    if (currentDate < dob || dob === '') {
       return;
     }
 
-    const diff = (currentDate - dob) / 1000;
-    const year = Math.round(diff / (3600 * 24 * 365.25));
-    const month = Math.round(diff / (3600 * 24 * 30.417));
-    const week = Math.round(diff / (3600 * 24 * 7));
-    const day = Math.round(diff / 86400);
-    const min = Math.round(diff / 60);
+    // To check wheater value need to round or not
+    const checkDateValue = value => {
+      const check = Array.from(
+        new Set(value.toFixed(2).toString().split('.')[1]),
+      ).join('');
+
+      return check === '0' ? Math.round(value) : value.toFixed(2);
+    };
+
+    const diff = checkDateValue(currentDate - dob) / 1000;
+    const year = checkDateValue(diff / (3600 * 24 * 365.25));
+    const month = checkDateValue(diff / (3600 * 24 * 30.417));
+    const week = checkDateValue(diff / (3600 * 24 * 7));
+    const day = checkDateValue(diff / 86400);
+    const min = checkDateValue(diff / 60);
 
     setDateObj([
       {name: 'year', value: year},
@@ -89,7 +98,6 @@ const DatePick = (): JSX.Element => {
           mode="date"
           onConfirm={handleConfirmDob}
           onCancel={hideDatePickerDob}
-          // onChange={handleChange('dobDate')}
           maximumDate={subDays(new Date(), 1)}
         />
 
