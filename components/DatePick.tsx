@@ -12,8 +12,8 @@ const DatePick = (): JSX.Element => {
   const [isDatePickerVisibleDob, setDatePickerVisibilityDob] = useState(false);
   const [isDatePickerVisibleCurrent, setDatePickerVisibilityCurrent] =
     useState(false);
-  const [dob, setDob] = useState('');
-  const [currentDate, setCurrentDate] = useState(new Date().getTime());
+  const [dob, setDob] = useState(subDays(new Date(), 1));
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [dateObj, setDateObj] = useState([]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -70,7 +70,7 @@ const DatePick = (): JSX.Element => {
     const month = checkDateValue(diff / (3600 * 24 * 30.417));
     const week = checkDateValue(diff / (3600 * 24 * 7));
     const day = checkDateValue(diff / 86400);
-    const min = checkDateValue(diff / 60);
+    const min = Math.round(diff / 60);
 
     setDateObj([
       {name: 'year', value: year},
@@ -99,6 +99,7 @@ const DatePick = (): JSX.Element => {
           onConfirm={handleConfirmDob}
           onCancel={hideDatePickerDob}
           maximumDate={subDays(new Date(), 1)}
+          date={new Date(dob)}
         />
 
         <TouchableOpacity style={styles.dateBtn} onPress={showDatePickerDob}>
@@ -117,6 +118,7 @@ const DatePick = (): JSX.Element => {
           mode="date"
           onConfirm={handleConfirmCurrent}
           onCancel={hideDatePickerCurrent}
+          date={new Date(currentDate)}
         />
 
         <TouchableOpacity
