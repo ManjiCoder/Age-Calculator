@@ -3,8 +3,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import React, {useState} from 'react';
 import {format, subDays} from 'date-fns';
-import * as Yup from 'yup';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+// import * as Yup from 'yup';
 // import {Formik} from 'formik';
 
 const DatePick = (): JSX.Element => {
@@ -12,15 +12,15 @@ const DatePick = (): JSX.Element => {
   const [isDatePickerVisibleDob, setDatePickerVisibilityDob] = useState(false);
   const [isDatePickerVisibleCurrent, setDatePickerVisibilityCurrent] =
     useState(false);
-  const [dob, setDob] = useState(subDays(new Date(), 1));
+  const [dob, setDob] = useState(null);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [errors, setErrors] = useState(false);
   const [dateObj, setDateObj] = useState([]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const dateSchema = Yup.object().shape({
-    dobDate: Yup.date().required('dob is required'),
-    pickDate: Yup.date().required('pickDate is required'),
-  });
+  // const dateSchema = Yup.object().shape({
+  //   dobDate: Yup.string('must be date').required('Date of Birth is required'),
+  //   // pickDate: Yup.date('Enter valid date').required('pickDate is required'),
+  // });
 
   const showDatePickerDob = () => {
     setDatePickerVisibilityDob(true);
@@ -39,23 +39,28 @@ const DatePick = (): JSX.Element => {
   };
 
   const handleConfirmDob = date => {
-    console.warn({date});
+    // console.warn({date});
     hideDatePickerDob();
-    setDob(new Date(date).getTime());
+    setDob(new Date(date));
+    if (dob === null) {
+      setErrors('Date of Birth is required');
+    }
+    setErrors(false);
   };
 
   const handleConfirmCurrent = date => {
-    console.warn({date});
+    // console.warn({date});
     hideDatePickerCurrent();
-    setCurrentDate(new Date(date).getTime());
+    setCurrentDate(new Date(date));
   };
 
   const calculateAge = () => {
     // console.warn('DOB: ', dob, 'currentDate: ', currentDate);
-    if (currentDate < dob || dob === '') {
+    if (currentDate < dob || dob === null) {
+      setErrors(dob === null ? 'Date of Birth is required' : 'Invalid Date');
       return;
     }
-
+    setErrors(false);
     // To check wheater value need to round or not
     const checkDateValue = value => {
       const check = Array.from(
@@ -65,7 +70,7 @@ const DatePick = (): JSX.Element => {
       return check === '0' ? Math.round(value) : value.toFixed(2);
     };
 
-    const diff = checkDateValue(currentDate - dob) / 1000;
+    const diff = checkDateValue(currentDate.getTime() - dob.getTime()) / 1000;
     const year = checkDateValue(diff / (3600 * 24 * 365.25));
     const month = checkDateValue(diff / (3600 * 24 * 30.417));
     const week = checkDateValue(diff / (3600 * 24 * 7));
@@ -83,13 +88,6 @@ const DatePick = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      {/* <Formik
-        initialValues={{dobDate: '', currentdate: ''}}
-        validationSchema={dateSchema}
-        onSubmit={values => console.log(values)}>
-        {({handleChange, handleBlur, handleSubmit, values}) => (
-          <View> */}
-      {/* Dob - Date */}
       <View style={styles.dateWrapper}>
         <Text style={styles.headingSecondary}>Date Of Birth :</Text>
 
@@ -99,13 +97,14 @@ const DatePick = (): JSX.Element => {
           onConfirm={handleConfirmDob}
           onCancel={hideDatePickerDob}
           maximumDate={subDays(new Date(), 1)}
-          date={new Date(dob)}
+          date={new Date(dob !== null ? dob : subDays(new Date(), 1))}
         />
 
         <TouchableOpacity style={styles.dateBtn} onPress={showDatePickerDob}>
           <Text style={styles.dateText}>
             {dob ? format(dob, 'dd-MMM-yyyy') : 'DD-MM-YYYY'}
           </Text>
+          {errors && <Text style={styles.errorText}>* {errors}</Text>}
         </TouchableOpacity>
       </View>
 
@@ -147,9 +146,7 @@ const DatePick = (): JSX.Element => {
       <TouchableOpacity style={styles.btnPrimary} onPress={calculateAge}>
         <Text style={[styles.headingSecondary, styles.btnText]}>Submit</Text>
       </TouchableOpacity>
-      {/* </View>
-        )}
-      </Formik> */}
+
       {/* Show Result */}
       <View style={styles.btnPrimary}>
         {dateObj.length > 0 &&
@@ -187,6 +184,14 @@ const styles = StyleSheet.create({
     gap: 20,
     paddingBottom: 30,
   },
+  errorText: {
+    fontWeight: '500',
+    color: 'red',
+    textTransform: 'capitalize',
+    fontSize: 11,
+    position: 'absolute',
+    top: 45,
+  },
   textBold: {
     fontWeight: '900',
     lineHeight: 20,
@@ -197,6 +202,8 @@ const styles = StyleSheet.create({
   checkboxText: {
     fontSize: 14,
     color: 'navy',
+    fontWeight: '700',
+    textDecorationLine: 'none',
   },
   dateWrapper: {
     flexDirection: 'row',
