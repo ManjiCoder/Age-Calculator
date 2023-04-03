@@ -1,5 +1,11 @@
 /* eslint-disable prettier/prettier */
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import React, {useState} from 'react';
 import {format, subDays} from 'date-fns';
@@ -88,9 +94,9 @@ const DatePick = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor={'navy'} />
       <View style={styles.dateWrapper}>
         <Text style={styles.headingSecondary}>Date Of Birth :</Text>
-
         <DateTimePickerModal
           isVisible={isDatePickerVisibleDob}
           mode="date"
