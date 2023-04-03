@@ -1,11 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import React, {useState} from 'react';
 import {format, subDays} from 'date-fns';
@@ -13,7 +7,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 // import * as Yup from 'yup';
 // import {Formik} from 'formik';
 
-const DatePick = (): JSX.Element => {
+const DatePick = ({isDarkMode}): JSX.Element => {
   const [isChecked, setIsChecked] = useState(false);
   const [isDatePickerVisibleDob, setDatePickerVisibilityDob] = useState(false);
   const [isDatePickerVisibleCurrent, setDatePickerVisibilityCurrent] =
@@ -91,12 +85,26 @@ const DatePick = (): JSX.Element => {
       {name: 'min', value: min},
     ]);
   };
-
+  const handleCheck = () => {
+    setIsChecked(!isChecked);
+  };
+  const handleReset = () => {
+    setDob(null);
+    setErrors(false);
+    setDateObj([]);
+    setIsChecked(false);
+    setCurrentDate(new Date());
+  };
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor={'navy'} />
       <View style={styles.dateWrapper}>
-        <Text style={styles.headingSecondary}>Date Of Birth :</Text>
+        <Text
+          style={[
+            styles.headingSecondary,
+            isDarkMode ? styles.textDark : styles.textLight,
+          ]}>
+          Date Of Birth :
+        </Text>
         <DateTimePickerModal
           isVisible={isDatePickerVisibleDob}
           mode="date"
@@ -107,16 +115,26 @@ const DatePick = (): JSX.Element => {
         />
 
         <TouchableOpacity style={styles.dateBtn} onPress={showDatePickerDob}>
-          <Text style={styles.dateText}>
+          <Text style={[styles.dateText, isDarkMode && {color: '#2F58CD'}]}>
             {dob ? format(dob, 'dd-MMM-yyyy') : 'DD-MM-YYYY'}
           </Text>
-          {errors && <Text style={styles.errorText}>* {errors}</Text>}
+          {errors && (
+            <Text style={[styles.errorText, isDarkMode && {color: 'gold'}]}>
+              * {errors}
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
 
       {/* Current/updateCurrent - Date */}
       <View style={styles.dateWrapper}>
-        <Text style={styles.headingSecondary}>Current Date :</Text>
+        <Text
+          style={[
+            styles.headingSecondary,
+            isDarkMode ? styles.textDark : styles.textLight,
+          ]}>
+          Current Date :
+        </Text>
 
         <DateTimePickerModal
           isVisible={isDatePickerVisibleCurrent}
@@ -130,7 +148,7 @@ const DatePick = (): JSX.Element => {
           style={styles.dateBtn}
           disabled={!isChecked}
           onPress={showDatePickerCurrent}>
-          <Text style={styles.dateText}>
+          <Text style={[styles.dateText, isDarkMode && {color: '#2F58CD'}]}>
             {format(currentDate, 'dd-MMM-yyyy')}
           </Text>
         </TouchableOpacity>
@@ -140,21 +158,45 @@ const DatePick = (): JSX.Element => {
       <View style={styles.checkboxWrapper}>
         <BouncyCheckbox
           size={21}
-          fillColor="navy"
+          fillColor={isDarkMode ? '#2F58CD' : '#000070'}
           unfillColor="white"
-          text="Click me to change the Current Date"
-          textStyle={styles.checkboxText}
-          onPress={() => setIsChecked(!isChecked)}
+          text={`Click me to ${
+            isChecked ? 'fixed' : 'change'
+          } the Current Date`}
+          textStyle={[
+            styles.checkboxText,
+            isDarkMode ? styles.textDark : styles.textLight,
+          ]}
+          onPress={handleCheck}
         />
       </View>
 
       {/* Submit Button */}
-      <TouchableOpacity style={styles.btnPrimary} onPress={calculateAge}>
+      <TouchableOpacity
+        style={[
+          styles.btnPrimary,
+          isDarkMode ? styles.btnDark : styles.btnLight,
+        ]}
+        onPress={calculateAge}>
         <Text style={[styles.headingSecondary, styles.btnText]}>Submit</Text>
       </TouchableOpacity>
 
+      {/* Reset Button */}
+      <TouchableOpacity
+        style={[
+          styles.btnPrimary,
+          isDarkMode ? styles.btnDark : styles.btnLight,
+        ]}
+        onPress={handleReset}>
+        <Text style={[styles.headingSecondary, styles.btnText]}>Reset</Text>
+      </TouchableOpacity>
+
       {/* Show Result */}
-      <View style={styles.btnPrimary}>
+      <View
+        style={[
+          styles.btnPrimary,
+          isDarkMode ? styles.btnDark : styles.btnLight,
+        ]}>
         {dateObj.length > 0 &&
           dateObj.map(({name, value}, index) => {
             // eslint-disable-next-line eqeqeq
@@ -190,6 +232,14 @@ const styles = StyleSheet.create({
     gap: 20,
     paddingBottom: 30,
   },
+  textDark: {
+    color: 'white',
+  },
+  textLight: {
+    color: 'navy',
+  },
+  btnDark: {backgroundColor: '#2F58CD'},
+  btnLight: {backgroundColor: 'navy'},
   errorText: {
     fontWeight: '500',
     color: 'red',
@@ -207,9 +257,9 @@ const styles = StyleSheet.create({
   },
   checkboxText: {
     fontSize: 14,
-    color: 'navy',
     fontWeight: '700',
     textDecorationLine: 'none',
+    textTransform: 'capitalize',
   },
   dateWrapper: {
     flexDirection: 'row',
@@ -220,14 +270,12 @@ const styles = StyleSheet.create({
   headingSecondary: {
     fontSize: 20,
     fontWeight: '700',
-    color: 'navy',
   },
   dateBtn: {
     backgroundColor: 'white',
     padding: 10,
     elevation: 5,
     borderRadius: 4,
-    color: 'white',
     width: 180,
   },
   dateText: {
@@ -238,8 +286,6 @@ const styles = StyleSheet.create({
   },
   btnPrimary: {
     marginTop: 8,
-    backgroundColor: 'navy',
-    color: 'gold',
     width: 360,
     marginStart: 'auto',
     marginEnd: 'auto',
@@ -247,10 +293,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   btnText: {
-    color: 'white',
     textAlign: 'center',
     padding: 14,
     letterSpacing: 1,
+    color: 'white',
   },
   showText: {
     textTransform: 'capitalize',
