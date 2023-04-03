@@ -15,6 +15,7 @@ const App = (): JSX.Element => {
     <SafeAreaView
       style={[
         styles.container,
+        // eslint-disable-next-line react-native/no-inline-styles
         isDarkMode ? {backgroundColor: '#0B2447'} : {backgroundColor: 'white'},
       ]}>
       <StatusBar backgroundColor={isDarkMode ? '#2F58CD' : 'navy'} />
@@ -42,7 +43,13 @@ const styles = StyleSheet.create({
     fontSize: 36,
     marginVertical: 30,
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontFamily: 'CinzelDecorative-Black',
+    textShadowOffset: {
+      height: 0.7,
+      width: 0.7,
+    },
+    textShadowColor: 'red',
+    textShadowRadius: 0.5,
   },
   textDark: {
     color: 'white',

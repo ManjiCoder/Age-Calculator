@@ -241,12 +241,12 @@ const styles = StyleSheet.create({
   btnDark: {backgroundColor: '#2F58CD'},
   btnLight: {backgroundColor: 'navy'},
   errorText: {
-    fontWeight: '500',
+    fontFamily: 'BalooBhai2-Bold',
     color: 'red',
     textTransform: 'capitalize',
     fontSize: 11,
     position: 'absolute',
-    top: 45,
+    top: 47,
   },
   textBold: {
     fontWeight: '900',
@@ -257,9 +257,10 @@ const styles = StyleSheet.create({
   },
   checkboxText: {
     fontSize: 14,
-    fontWeight: '700',
+    // fontWeight: '700',
     textDecorationLine: 'none',
     textTransform: 'capitalize',
+    fontFamily: 'BalooBhai2-ExtraBold',
   },
   dateWrapper: {
     flexDirection: 'row',
@@ -269,7 +270,7 @@ const styles = StyleSheet.create({
   },
   headingSecondary: {
     fontSize: 20,
-    fontWeight: '700',
+    fontFamily: 'BalooBhai2-Bold',
   },
   dateBtn: {
     backgroundColor: 'white',
@@ -279,9 +280,9 @@ const styles = StyleSheet.create({
     width: 180,
   },
   dateText: {
-    fontWeight: '700',
     fontSize: 16,
     textAlign: 'center',
+    fontFamily: 'BalooBhai2-Bold',
     color: 'navy',
   },
   btnPrimary: {
@@ -289,7 +290,7 @@ const styles = StyleSheet.create({
     width: 360,
     marginStart: 'auto',
     marginEnd: 'auto',
-    elevation: 5,
+    elevation: 7,
     borderRadius: 5,
   },
   btnText: {
@@ -297,11 +298,14 @@ const styles = StyleSheet.create({
     padding: 14,
     letterSpacing: 1,
     color: 'white',
+    fontSize: 21,
+    fontFamily: 'BalooBhai2-ExtraBold',
+    textTransform: 'uppercase',
   },
   showText: {
     textTransform: 'capitalize',
     textAlign: 'left',
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: 'BalooBhai2-ExtraBold',
   },
 });
