@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     fontSize: 36,
     marginVertical: 30,
     textAlign: 'center',
-    fontFamily: 'CinzelDecorative-Black',
+    fontFamily: 'CinzelDecorative-Bold',
     textShadowOffset: {
       height: 0.7,
       width: 0.7,

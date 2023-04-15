@@ -1,5 +1,11 @@
 /* eslint-disable prettier/prettier */
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Vibration,
+  View,
+} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import React, {useState} from 'react';
 import {format, subDays} from 'date-fns';
@@ -84,6 +90,8 @@ const DatePick = ({isDarkMode}): JSX.Element => {
       {name: 'week', value: week},
       {name: 'min', value: min},
     ]);
+
+    Vibration.vibrate(40);
   };
   const handleCheck = () => {
     setIsChecked(!isChecked);
@@ -94,6 +102,7 @@ const DatePick = ({isDarkMode}): JSX.Element => {
     setDateObj([]);
     setIsChecked(false);
     setCurrentDate(new Date());
+    Vibration.vibrate(40);
   };
   return (
     <View style={styles.container}>
@@ -246,7 +255,7 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
     fontSize: 11,
     position: 'absolute',
-    top: 47,
+    top: 48,
   },
   textBold: {
     fontWeight: '900',
@@ -257,7 +266,6 @@ const styles = StyleSheet.create({
   },
   checkboxText: {
     fontSize: 14,
-    // fontWeight: '700',
     textDecorationLine: 'none',
     textTransform: 'capitalize',
     fontFamily: 'BalooBhai2-ExtraBold',
